@@ -107,7 +107,7 @@ public class Main {
 	static void benchmarkScheduledExecutor(String taskName, int nTasks, int nTicks) throws InterruptedException {
 		System.out.println("========== ScheduledExecutorService ==========");
 		System.out.println("Type de tâche : " + taskName);
-		System.out.println("Nombre de tâche par tick : " + nTasks);
+		System.out.println("Nombre de tâches par tick : " + nTasks);
 		System.out.println("Nombre de ticks à effectuer : " + nTicks);
 		System.out.println("Exécution des ticks...");
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
@@ -127,7 +127,7 @@ public class Main {
 	static void benchmarkUpdateThread(String taskName, int nTasks, int nTicks) throws InterruptedException {
 		System.out.println("================ UpdateThread ================");
 		System.out.println("Type de tâche : " + taskName);
-		System.out.println("Nombre de tâche par tick : " + nTasks);
+		System.out.println("Nombre de tâches par tick : " + nTasks);
 		System.out.println("Nombre de ticks à effectuer : " + nTicks);
 		System.out.println("Exécution des ticks...");
 		ConcurrentUpdater updater = new ConcurrentUpdater(4);
