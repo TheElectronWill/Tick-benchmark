@@ -33,7 +33,11 @@ public abstract class NiceThread implements Runnable {
 
 	public void stopNow() {
 		run = false;
-		t.stop();
+		try {
+			t.stop();
+		} catch (ThreadDeath ex) {
+			//silence
+		}
 	}
 
 	public void stopNicely() {

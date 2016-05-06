@@ -10,6 +10,10 @@ public class TMCounterTask extends TickMeasuringTask {
 
 	private AtomicInteger counter = new AtomicInteger();
 
+	public TMCounterTask(TickMeasuringThread tmt) {
+		super(tmt);
+	}
+
 	@Override
 	public void run() {
 		counter.incrementAndGet();

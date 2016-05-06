@@ -7,15 +7,10 @@ package com.electronwill.tests.tasks;
  */
 public class TickMeasuringTask implements Runnable {
 
-	public static TickMeasuringThread staticTmt;
 	protected final TickMeasuringThread tmt;
 
 	public TickMeasuringTask(TickMeasuringThread tmt) {
 		this.tmt = tmt;
-	}
-
-	public TickMeasuringTask() {
-		this.tmt = staticTmt;
 	}
 
 	@Override

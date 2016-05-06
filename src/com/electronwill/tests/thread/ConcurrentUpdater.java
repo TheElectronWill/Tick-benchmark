@@ -41,4 +41,10 @@ public class ConcurrentUpdater {
 		}
 	}
 
+	public void awaitTermination() throws InterruptedException {
+		for (UpdateThread thread : threads) {
+			thread.t.join();
+		}
+	}
+
 }

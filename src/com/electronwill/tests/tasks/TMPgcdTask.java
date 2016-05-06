@@ -12,7 +12,8 @@ public class TMPgcdTask extends TickMeasuringTask {
 
 	private final int i, j;
 
-	public TMPgcdTask(int i, int j) {
+	public TMPgcdTask(int i, int j, TickMeasuringThread tmt) {
+		super(tmt);
 		this.i = i;
 		this.j = j;
 	}
@@ -20,43 +21,50 @@ public class TMPgcdTask extends TickMeasuringTask {
 	/**
 	 * Mini task which takes almost 0 time to complete.
 	 */
-	public static TMPgcdTask mini() {
-		return new TMPgcdTask(1, 1);
+	public static TMPgcdTask mini(TickMeasuringThread tmt) {
+		return new TMPgcdTask(1, 1, tmt);
 	}
 
 	/**
-	 * 100 times bigger than mini.
+	 * 10 times bigger than mini.
 	 */
-	public static TMPgcdTask small() {
-		return new TMPgcdTask(100, 1);
+	public static TMPgcdTask tiny(TickMeasuringThread tmt) {
+		return new TMPgcdTask(10, 1, tmt);
+	}
+
+	/**
+	 * 10 times bigger than tiny.
+	 */
+	public static TMPgcdTask small(TickMeasuringThread tmt) {
+		return new TMPgcdTask(100, 1, tmt);
 	}
 
 	/**
 	 * 10 times bigger than small.
 	 */
-	public static TMPgcdTask medium() {
-		return new TMPgcdTask(100, 10);
+	public static TMPgcdTask medium(TickMeasuringThread tmt) {
+		return new TMPgcdTask(100, 10, tmt);
 	}
 
 	/**
 	 * 10 times bigger than medium.
 	 */
-	public static TMPgcdTask big() {
-		return new TMPgcdTask(100, 100);
+	public static TMPgcdTask big(TickMeasuringThread tmt) {
+		return new TMPgcdTask(100, 100, tmt);
 	}
 
 	/**
 	 * 10 times bigger than big.
 	 */
-	public static TMPgcdTask bigger() {
-		return new TMPgcdTask(1000, 100);
+	public static TMPgcdTask bigger(TickMeasuringThread tmt) {
+		return new TMPgcdTask(1000, 100, tmt);
 	}
 
 	/**
 	 * 10 times bigger than bigger.
 	 */
-	public static TMPgcdTask huge() {
-		return new TMPgcdTask(1000, 1000);
+	public static TMPgcdTask huge(TickMeasuringThread tmt) {
+		return new TMPgcdTask(1000, 1000, tmt);
 	}
 
 	@Override
