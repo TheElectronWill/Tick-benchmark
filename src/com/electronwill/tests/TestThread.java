@@ -21,6 +21,7 @@ public class TestThread {
 
 	static void benchmark() {
 		final int nTasks = 2000;
+		new ConsoleThread().start();
 		TickMeasuringThread tmt = new TickMeasuringThread(nTasks);
 		TickMeasuringTask.staticTmt = tmt;
 		tmt.start();
@@ -32,6 +33,7 @@ public class TestThread {
 	}
 
 	static void debug() {
+		new ConsoleThread().start();
 		ConcurrentUpdater updater = new ConcurrentUpdater(4);
 		updater.submit(new ClockTask());
 		updater.start();

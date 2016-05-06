@@ -23,6 +23,7 @@ public class TestExecutor {
 
 	static void benchmark() {
 		final int nTasks = 2000;
+		new ConsoleThread().start();
 		TickMeasuringThread tmt = new TickMeasuringThread(nTasks);
 		TickMeasuringTask.staticTmt = tmt;
 		tmt.start();
@@ -33,6 +34,7 @@ public class TestExecutor {
 	}
 
 	static void debug() {
+		new ConsoleThread().start();
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
 		executor.scheduleAtFixedRate(new ClockTask(), 0, 50, TimeUnit.MILLISECONDS);
 	}
