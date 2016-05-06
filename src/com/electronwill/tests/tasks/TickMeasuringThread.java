@@ -29,11 +29,13 @@ public class TickMeasuringThread extends NiceThread {
 		while (run) {
 			latch.await();
 			long t1 = System.nanoTime();
+			long delta = t1 - t0;
 
 			tickFinished = true;
 			latch = new CountDownLatch(nTasks);
 
-			double ms = (t1 - t0) / 1000_000.0;
+			double ms = delta / 1000_000.0;
+			builder.add(ms);
 			System.out.println("tick : " + ms + " millisecondes");
 		}
 	}
