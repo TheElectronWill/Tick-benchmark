@@ -34,7 +34,7 @@ public class ConcurrentUpdater {
 		}
 	}
 
-	public void submit(Runnable r) {
+	public synchronized void submit(Runnable r) {
 		threads[i++].toUpdate.add(r);
 		if (i == threads.length) {
 			i = 0;
