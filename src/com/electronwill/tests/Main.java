@@ -1,6 +1,7 @@
 package com.electronwill.tests;
 
 import com.electronwill.tests.tasks.ClockTask;
+import com.electronwill.tests.tasks.TMPgcdTask;
 import com.electronwill.tests.tasks.TaskCreator;
 import com.electronwill.tests.tasks.TickMeasuringThread;
 import com.electronwill.tests.thread.ConcurrentUpdater;
@@ -23,7 +24,7 @@ public class Main {
 		switch (args.length) {
 			case 0:
 				Scanner sc = new Scanner(System.in);
-				System.out.println("Type de tâche ? (counter/pmini/ptiny/psmall/pmedium/pbig/pbigger/phuge/help/debug)");
+				System.out.println("Type de tâche ? (counter/pmini/ptiny/psmall/pmedium/pbig/pbigger/phuge/uneven/help/debug)");
 				taskName = sc.nextLine();
 				if (!doAction(taskName)) {
 					return;
@@ -59,7 +60,11 @@ public class Main {
 				return;
 		}
 		System.out.println("Lancement du test...");
-		benchmark(taskName, nTasks, nTicks, testExecutor, testThread);
+		if (taskName.equalsIgnoreCase("uneven")) {
+			benchmarkUneven(nTasks, nTicks, testExecutor, testThread);
+		} else {
+			benchmark(taskName, nTasks, nTicks, testExecutor, testThread);
+		}
 	}
 
 	/**
@@ -145,6 +150,81 @@ public class Main {
 		System.out.println();
 	}
 
+	static void benchmarkUneven(int nTasks, int nTicks, boolean testExecutor, boolean testThread) throws InterruptedException {
+		new ConsoleThread().start();
+		System.out.println("----------------------------------------------");
+		System.out.println("-             Phase de \"warm up\"             -");
+		System.out.println("----------------------------------------------");
+		System.out.println("Durant cette phase, des statistiques seront affichées, mais elles seront probablement moins bonnes car la JVM n'aura pas encore fait toutes les compilations et optimisations utiles.");
+		if (testExecutor) {
+			benchmarkUnevenScheduledExecutor(nTasks, 200);
+			System.gc();
+		}
+		if (testThread) {
+			benchmarkUnevenUpdateThread(nTasks, 200);
+			System.gc();
+		}
+
+		System.out.println("----------------------------------------------");
+		System.out.println("-                Benchmark !                 -");
+		System.out.println("----------------------------------------------");
+		if (testExecutor) {
+			benchmarkUnevenScheduledExecutor(nTasks, nTicks);
+			System.gc();
+		}
+		if (testThread) {
+			benchmarkUnevenUpdateThread(nTasks, nTicks);
+		}
+		System.exit(0);
+	}
+
+	static void benchmarkUnevenUpdateThread(int nTasks, int nTicks) throws InterruptedException {
+		nTasks = (nTasks / 4) * 4;
+		System.out.println("================ UpdateThread ================");
+		System.out.println("Type de tâche : ptiny et psmall (mauvaise répartition : 1 thread sur 4 sera plus chargé que les autres)");
+		System.out.println("Nombre de tâches par tick : " + nTasks);
+		System.out.println("Nombre de ticks à effectuer : " + nTicks);
+		System.out.println("Exécution des ticks...");
+		ConcurrentUpdater updater = new ConcurrentUpdater(4);
+
+		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, null, updater, 0, false);
+		tmt.start();
+		Runnable tinyTask = TMPgcdTask.tiny(tmt), smallTask = TMPgcdTask.small(tmt);
+
+		for (int i = 0; i < nTasks / 4; i++) {
+			updater.submit(tinyTask);
+			updater.submit(tinyTask);
+			updater.submit(tinyTask);
+			updater.submit(smallTask);
+		}
+		updater.start();
+		updater.awaitTermination();
+		System.out.println();
+	}
+
+	static void benchmarkUnevenScheduledExecutor(int nTasks, int nTicks) throws InterruptedException {
+		nTasks = (nTasks / 4) * 4;
+		System.out.println("================ ScheduledExecutor ================");
+		System.out.println("Type de tâche : ptiny et psmall");
+		System.out.println("Nombre de tâches par tick : " + nTasks);
+		System.out.println("Nombre de ticks à effectuer : " + nTicks);
+		System.out.println("Exécution des ticks...");
+		ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
+
+		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, executor, null, 0, false);
+		tmt.start();
+		Runnable tinyTask = TMPgcdTask.tiny(tmt), smallTask = TMPgcdTask.small(tmt);
+
+		for (int i = 0; i < nTasks / 4; i++) {
+			executor.scheduleAtFixedRate(tinyTask, 0, 50, TimeUnit.MILLISECONDS);
+			executor.scheduleAtFixedRate(tinyTask, 0, 50, TimeUnit.MILLISECONDS);
+			executor.scheduleAtFixedRate(tinyTask, 0, 50, TimeUnit.MILLISECONDS);
+			executor.scheduleAtFixedRate(smallTask, 0, 50, TimeUnit.MILLISECONDS);
+		}
+		executor.awaitTermination(10, TimeUnit.DAYS);
+		System.out.println();
+	}
+
 	static void debug() throws InterruptedException {
 		debugScheduledExecutor();
 		debugUpdateThread();
@@ -172,10 +252,10 @@ public class Main {
 
 	static void printHelp() {
 		System.out.println("================ Aide ================");
-		System.out.println("Paramètres possibles : [help|debug| {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge} param ]");
+		System.out.println("Paramètres possibles : [help|debug| {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge|uneven} param ]");
 		System.out.println("  help : affiche cette aide");
 		System.out.println("  debug : vérifie que les ticks s'exécutent toutes les 50 millisecondes");
-		System.out.println("  counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge <paramètres du benchmark> : exécute un benchmark avec le type de tâche spécifié");
+		System.out.println("  {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge|uneven} param : exécute un benchmark avec le type de tâche spécifié");
 		System.out.println("  <aucun> : demande les paramètres nécessaires un par un");
 		System.out.println("Paramètres du benchmark : nTasks nTicks [executorOnly|threadOnly]");
 		System.out.println("  nTasks : nombre de tâches par tick");
