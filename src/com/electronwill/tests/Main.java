@@ -181,7 +181,7 @@ public class Main {
 	static void benchmarkUnevenUpdateThread(int nTasks, int nTicks) throws InterruptedException {
 		nTasks = (nTasks / 4) * 4;
 		System.out.println("================ UpdateThread ================");
-		System.out.println("Type de tâche : ptiny et psmall (mauvaise répartition : 1 thread sur 4 sera plus chargé que les autres)");
+		System.out.println("Type de tâche : psmall et pbig (mauvaise répartition : 1 thread sur 4 sera plus chargé que les autres)");
 		System.out.println("Nombre de tâches par tick : " + nTasks);
 		System.out.println("Nombre de ticks à effectuer : " + nTicks);
 		System.out.println("Exécution des ticks...");
@@ -189,13 +189,13 @@ public class Main {
 
 		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, null, updater, 0, false);
 		tmt.start();
-		Runnable tinyTask = TMPgcdTask.tiny(tmt), smallTask = TMPgcdTask.small(tmt);
+		Runnable smallTask = TMPgcdTask.small(tmt), bigTask = TMPgcdTask.big(tmt);
 
 		for (int i = 0; i < nTasks / 4; i++) {
-			updater.submit(tinyTask);
-			updater.submit(tinyTask);
-			updater.submit(tinyTask);
 			updater.submit(smallTask);
+			updater.submit(smallTask);
+			updater.submit(smallTask);
+			updater.submit(bigTask);
 		}
 		updater.start();
 		updater.awaitTermination();
@@ -205,7 +205,7 @@ public class Main {
 	static void benchmarkUnevenScheduledExecutor(int nTasks, int nTicks) throws InterruptedException {
 		nTasks = (nTasks / 4) * 4;
 		System.out.println("================ ScheduledExecutor ================");
-		System.out.println("Type de tâche : ptiny et psmall");
+		System.out.println("Type de tâche : psmall et pbig");
 		System.out.println("Nombre de tâches par tick : " + nTasks);
 		System.out.println("Nombre de ticks à effectuer : " + nTicks);
 		System.out.println("Exécution des ticks...");
@@ -213,13 +213,13 @@ public class Main {
 
 		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, executor, null, 0, false);
 		tmt.start();
-		Runnable tinyTask = TMPgcdTask.tiny(tmt), smallTask = TMPgcdTask.small(tmt);
+		Runnable smallTask = TMPgcdTask.small(tmt), bigTask = TMPgcdTask.big(tmt);
 
 		for (int i = 0; i < nTasks / 4; i++) {
-			executor.scheduleAtFixedRate(tinyTask, 0, 50, TimeUnit.MILLISECONDS);
-			executor.scheduleAtFixedRate(tinyTask, 0, 50, TimeUnit.MILLISECONDS);
-			executor.scheduleAtFixedRate(tinyTask, 0, 50, TimeUnit.MILLISECONDS);
 			executor.scheduleAtFixedRate(smallTask, 0, 50, TimeUnit.MILLISECONDS);
+			executor.scheduleAtFixedRate(smallTask, 0, 50, TimeUnit.MILLISECONDS);
+			executor.scheduleAtFixedRate(smallTask, 0, 50, TimeUnit.MILLISECONDS);
+			executor.scheduleAtFixedRate(bigTask, 0, 50, TimeUnit.MILLISECONDS);
 		}
 		executor.awaitTermination(10, TimeUnit.DAYS);
 		System.out.println();

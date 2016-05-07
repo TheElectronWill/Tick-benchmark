@@ -27,10 +27,10 @@ public class TickMeasuringThread extends NiceThread {
 	private final int skipRecords;
 	private final boolean printTicks;
 
-	public TickMeasuringThread(int maxTicks, int nTasks, ExecutorService executorService, ConcurrentUpdater concurrentUpdater, int skipRecords, boolean printTicks) {
+	public TickMeasuringThread(int nTasks, int maxTicks, ExecutorService executorService, ConcurrentUpdater concurrentUpdater, int skipRecords, boolean printTicks) {
 		super("TickMeasuringThread");
-		this.maxTicks = maxTicks;
 		this.nTasks = nTasks;
+		this.maxTicks = maxTicks;
 		this.executorService = executorService;
 		this.concurrentUpdater = concurrentUpdater;
 		this.skipRecords = skipRecords;
