@@ -17,15 +17,40 @@ import java.util.concurrent.TimeUnit;
  */
 public class Main {
 
+	static boolean testExecutor = true, testConcurrentThread = true, testSingleThread = true;
+
+	static void setTestCase(String testName) {
+		switch (testName.toLowerCase()) {
+			case "all":
+				testExecutor = testConcurrentThread = testSingleThread = true;
+				break;
+			case "executor_only":
+				testConcurrentThread = testSingleThread = false;
+				break;
+			case "concurrent_thread_only":
+				testExecutor = testSingleThread = false;
+				break;
+			case "single_thread_only":
+				testExecutor = testSingleThread = false;
+				break;
+			case "threads_only":
+				testExecutor = false;
+				break;
+			default:
+				System.out.println("Paramètre invalide : \"" + testName + "\"");
+				System.exit(0);
+				break;
+		}
+	}
+
 	public static void main(String[] args) throws InterruptedException {
 		String taskName;//type de tâche
 		int nTasks;//nombre de tâches
 		int nTicks;//nombre de ticks
-		boolean testExecutor = true, testThread = true;
 		switch (args.length) {
 			case 0:
 				Scanner sc = new Scanner(System.in);
-				System.out.println("Type de tâche ? (counter/pmini/ptiny/psmall/pmedium/pbig/pbigger/phuge/uneven/hashmap/help/debug)");
+				System.out.println("Type de tâche ? (counter/pmini/ptiny/psmall/pmedium/pbig/pbigger/phuge/uneven/hashmap/hybrid1/hybrid2/hybrid3/help/debug)");
 				taskName = sc.nextLine();
 				if (!doAction(taskName)) {
 					return;
@@ -34,6 +59,8 @@ public class Main {
 				nTasks = Integer.parseInt(sc.nextLine());
 				System.out.println("Nombre de ticks ?");
 				nTicks = Integer.parseInt(sc.nextLine());
+				System.out.println("Que faut-il tester ? (all/executor_only/concurrent_thread_only/single_thread_only/threads_only)");
+				setTestCase(sc.nextLine());
 				break;
 			case 1:
 				taskName = args[0];
@@ -47,13 +74,7 @@ public class Main {
 				nTasks = Integer.parseInt(args[1]);
 				nTicks = Integer.parseInt(args[2]);
 				if (args.length == 4) {
-					if (args[0].equalsIgnoreCase("executorOnly") || args[0].equalsIgnoreCase("onlyExecutor")) {
-						testThread = false;
-					} else if (args[0].equalsIgnoreCase("threadOnly") || args[0].equalsIgnoreCase("onlyThread")) {
-						testExecutor = false;
-					} else {
-						System.out.println("Paramètre invalide : \"" + args[0] + "\"");
-					}
+					setTestCase(args[0]);
 				}
 				break;
 			default:
@@ -62,9 +83,9 @@ public class Main {
 		}
 		System.out.println("Lancement du test...");
 		if (taskName.equalsIgnoreCase("uneven")) {
-			benchmarkUneven(nTasks, nTicks, testExecutor, testThread);
+			benchmarkUneven(nTasks, nTicks);
 		} else {
-			benchmark(taskName, nTasks, nTicks, testExecutor, testThread);
+			benchmark(taskName, nTasks, nTicks);
 		}
 	}
 
@@ -82,7 +103,7 @@ public class Main {
 		return false;
 	}
 
-	static void benchmark(String taskName, int nTasks, int nTicks, boolean testExecutor, boolean testThread) throws InterruptedException {
+	static void benchmark(String taskName, int nTasks, int nTicks) throws InterruptedException {
 		new ConsoleThread().start();
 		System.out.println("----------------------------------------------");
 		System.out.println("-             Phase de \"warm up\"             -");
@@ -92,10 +113,11 @@ public class Main {
 			benchmarkScheduledExecutor(taskName, nTasks, 200);
 			System.gc();
 		}
-		if (testThread) {
+		if (testConcurrentThread) {
 			benchmarkUpdateThread(taskName, nTasks, 200);
 			System.gc();
-
+		}
+		if (testSingleThread) {
 			benchmarkSingleThread(taskName, nTasks, 200);
 			System.gc();
 		}
@@ -107,9 +129,11 @@ public class Main {
 			benchmarkScheduledExecutor(taskName, nTasks, nTicks);
 			System.gc();
 		}
-		if (testThread) {
+		if (testConcurrentThread) {
 			benchmarkUpdateThread(taskName, nTasks, nTicks);
 			System.gc();
+		}
+		if (testSingleThread) {
 			benchmarkSingleThread(taskName, nTasks, nTicks);
 		}
 		System.exit(0);
@@ -177,7 +201,7 @@ public class Main {
 		System.out.println();
 	}
 
-	static void benchmarkUneven(int nTasks, int nTicks, boolean testExecutor, boolean testThread) throws InterruptedException {
+	static void benchmarkUneven(int nTasks, int nTicks) throws InterruptedException {
 		new ConsoleThread().start();
 		System.out.println("----------------------------------------------");
 		System.out.println("-             Phase de \"warm up\"             -");
@@ -187,7 +211,7 @@ public class Main {
 			benchmarkUnevenScheduledExecutor(nTasks, 200);
 			System.gc();
 		}
-		if (testThread) {
+		if (testConcurrentThread) {
 			benchmarkUnevenUpdateThread(nTasks, 200);
 			System.gc();
 		}
@@ -199,7 +223,7 @@ public class Main {
 			benchmarkUnevenScheduledExecutor(nTasks, nTicks);
 			System.gc();
 		}
-		if (testThread) {
+		if (testConcurrentThread) {
 			benchmarkUnevenUpdateThread(nTasks, nTicks);
 		}
 		System.exit(0);
@@ -279,10 +303,10 @@ public class Main {
 
 	static void printHelp() {
 		System.out.println("================ Aide ================");
-		System.out.println("Paramètres possibles : [help|debug| {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge|uneven|hashmap} param ]");
+		System.out.println("Paramètres possibles : [help|debug| {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge|uneven|hashmap|hybrid1|hybrid2|hybrid3} param ]");
 		System.out.println("  help : affiche cette aide");
 		System.out.println("  debug : vérifie que les ticks s'exécutent toutes les 50 millisecondes");
-		System.out.println("  {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge|uneven|hashmap} param : exécute un benchmark avec le type de tâche spécifié");
+		System.out.println("  {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge|uneven|hashmap|hybrid1|hybrid2|hybrid3} param : exécute un benchmark avec le type de tâche spécifié");
 		System.out.println("  <aucun> : demande les paramètres nécessaires un par un");
 		System.out.println("Paramètres du benchmark : nTasks nTicks [executorOnly|threadOnly]");
 		System.out.println("  nTasks : nombre de tâches par tick");

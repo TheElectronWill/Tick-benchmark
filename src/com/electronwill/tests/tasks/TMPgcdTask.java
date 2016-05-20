@@ -6,7 +6,7 @@ package com.electronwill.tests.tasks;
  */
 public class TMPgcdTask extends TickMeasuringTask {
 
-	private static int pgcd(int a, int b) {
+	static int pgcd(int a, int b) {
 		return b == 0 ? a : pgcd(b, a % b);
 	}
 
@@ -36,7 +36,7 @@ public class TMPgcdTask extends TickMeasuringTask {
 	 * 10 times bigger than tiny.
 	 */
 	public static TMPgcdTask small(TickMeasuringThread tmt) {
-		return new TMPgcdTask(100, 1, tmt);
+		return new TMPgcdTask(50, 2, tmt);
 	}
 
 	/**

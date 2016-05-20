@@ -6,7 +6,7 @@ package com.electronwill.tests.tasks;
  */
 public class PgcdTask implements Runnable {
 
-	private static int pgcd(int a, int b) {
+	static int pgcd(int a, int b) {
 		return b == 0 ? a : pgcd(b, a % b);
 	}
 
@@ -28,7 +28,7 @@ public class PgcdTask implements Runnable {
 	 * 100 times bigger than mini.
 	 */
 	public static PgcdTask small() {
-		return new PgcdTask(100, 1);
+		return new PgcdTask(50, 2);
 	}
 
 	/**

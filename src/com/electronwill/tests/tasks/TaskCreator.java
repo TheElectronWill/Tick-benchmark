@@ -49,6 +49,14 @@ public class TaskCreator {
 			case "hashmap":
 			case "map":
 				return new TMHashMapTask(tmt, concurrent);
+			case "counter+pgcd":
+			case "hybrid":
+			case "hybrid1":
+				return concurrent ? new TMHybridTask1.Concurrent(tmt) : new TMHybridTask1.Simple(tmt);
+			case "hybrid2":
+				return concurrent ? new TMHybridTask2.Concurrent(tmt) : new TMHybridTask2.Simple(tmt);
+			case "hybrid3":
+				return concurrent ? new TMHybridTask3.Concurrent(tmt) : new TMHybridTask3.Simple(tmt);
 			default:
 				throw new IllegalArgumentException("Tâche inconnue : " + name);
 		}
