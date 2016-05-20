@@ -1,10 +1,12 @@
 package com.electronwill.tests.thread;
 
+import com.electronwill.tests.Stoppable;
+
 /**
  *
  * @author TheElectronWill
  */
-public abstract class NiceThread implements Runnable {
+public abstract class NiceThread implements Runnable, Stoppable {
 
 	protected volatile boolean run = true;
 	protected volatile Thread t;

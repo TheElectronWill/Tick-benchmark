@@ -1,5 +1,6 @@
 package com.electronwill.tests;
 
+import com.electronwill.tests.newidea.SingleUpdater;
 import com.electronwill.tests.tasks.ClockTask;
 import com.electronwill.tests.tasks.TMPgcdTask;
 import com.electronwill.tests.tasks.TaskCreator;
@@ -24,7 +25,7 @@ public class Main {
 		switch (args.length) {
 			case 0:
 				Scanner sc = new Scanner(System.in);
-				System.out.println("Type de tâche ? (counter/pmini/ptiny/psmall/pmedium/pbig/pbigger/phuge/uneven/help/debug)");
+				System.out.println("Type de tâche ? (counter/pmini/ptiny/psmall/pmedium/pbig/pbigger/phuge/uneven/hashmap/help/debug)");
 				taskName = sc.nextLine();
 				if (!doAction(taskName)) {
 					return;
@@ -94,6 +95,9 @@ public class Main {
 		if (testThread) {
 			benchmarkUpdateThread(taskName, nTasks, 200);
 			System.gc();
+
+			benchmarkSingleThread(taskName, nTasks, 200);
+			System.gc();
 		}
 
 		System.out.println("----------------------------------------------");
@@ -105,6 +109,8 @@ public class Main {
 		}
 		if (testThread) {
 			benchmarkUpdateThread(taskName, nTasks, nTicks);
+			System.gc();
+			benchmarkSingleThread(taskName, nTasks, nTicks);
 		}
 		System.exit(0);
 	}
@@ -117,7 +123,7 @@ public class Main {
 		System.out.println("Exécution des ticks...");
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
 
-		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, executor, null, 0, false);
+		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, executor::shutdownNow, 0, false);
 		tmt.start();
 		TaskCreator.setTmt(tmt);
 		Runnable task = TaskCreator.createFromName(taskName);
@@ -130,17 +136,38 @@ public class Main {
 	}
 
 	static void benchmarkUpdateThread(String taskName, int nTasks, int nTicks) throws InterruptedException {
-		System.out.println("================ UpdateThread ================");
+		System.out.println("================ ConcurrentUpdateThreads ================");
 		System.out.println("Type de tâche : " + taskName);
 		System.out.println("Nombre de tâches par tick : " + nTasks);
 		System.out.println("Nombre de ticks à effectuer : " + nTicks);
 		System.out.println("Exécution des ticks...");
 		ConcurrentUpdater updater = new ConcurrentUpdater(4);
 
-		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, null, updater, 0, false);
+		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, updater, 0, false);
 		tmt.start();
 		TaskCreator.setTmt(tmt);
 		Runnable task = TaskCreator.createFromName(taskName);
+
+		for (int i = 0; i < nTasks; i++) {
+			updater.submit(task);
+		}
+		updater.start();
+		updater.awaitTermination();
+		System.out.println();
+	}
+
+	static void benchmarkSingleThread(String taskName, int nTasks, int nTicks) throws InterruptedException {
+		System.out.println("================ SingleThread ================");
+		System.out.println("Type de tâche : " + taskName);
+		System.out.println("Nombre de tâches par tick : " + nTasks);
+		System.out.println("Nombre de ticks à effectuer : " + nTicks);
+		System.out.println("Exécution des ticks...");
+		SingleUpdater updater = new SingleUpdater(5000);
+
+		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, updater, 0, false);
+		tmt.start();
+		TaskCreator.setTmt(tmt);
+		Runnable task = TaskCreator.createFromName(taskName, false);
 
 		for (int i = 0; i < nTasks; i++) {
 			updater.submit(task);
@@ -187,7 +214,7 @@ public class Main {
 		System.out.println("Exécution des ticks...");
 		ConcurrentUpdater updater = new ConcurrentUpdater(4);
 
-		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, null, updater, 0, false);
+		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, updater, 0, false);
 		tmt.start();
 		Runnable smallTask = TMPgcdTask.small(tmt), bigTask = TMPgcdTask.big(tmt);
 
@@ -211,7 +238,7 @@ public class Main {
 		System.out.println("Exécution des ticks...");
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
 
-		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, executor, null, 0, false);
+		TickMeasuringThread tmt = new TickMeasuringThread(nTasks, nTicks, executor::shutdownNow, 0, false);
 		tmt.start();
 		Runnable smallTask = TMPgcdTask.small(tmt), bigTask = TMPgcdTask.big(tmt);
 
@@ -252,10 +279,10 @@ public class Main {
 
 	static void printHelp() {
 		System.out.println("================ Aide ================");
-		System.out.println("Paramètres possibles : [help|debug| {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge|uneven} param ]");
+		System.out.println("Paramètres possibles : [help|debug| {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge|uneven|hashmap} param ]");
 		System.out.println("  help : affiche cette aide");
 		System.out.println("  debug : vérifie que les ticks s'exécutent toutes les 50 millisecondes");
-		System.out.println("  {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge|uneven} param : exécute un benchmark avec le type de tâche spécifié");
+		System.out.println("  {counter|pmini|ptiny|psmall|pmedium|pbig|pbigger|phuge|uneven|hashmap} param : exécute un benchmark avec le type de tâche spécifié");
 		System.out.println("  <aucun> : demande les paramètres nécessaires un par un");
 		System.out.println("Paramètres du benchmark : nTasks nTicks [executorOnly|threadOnly]");
 		System.out.println("  nTasks : nombre de tâches par tick");

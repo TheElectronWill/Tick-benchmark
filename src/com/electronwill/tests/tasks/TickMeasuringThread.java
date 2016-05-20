@@ -1,10 +1,9 @@
 package com.electronwill.tests.tasks;
 
-import com.electronwill.tests.thread.ConcurrentUpdater;
+import com.electronwill.tests.Stoppable;
 import com.electronwill.tests.thread.NiceThread;
 import java.util.DoubleSummaryStatistics;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.stream.DoubleStream;
 
 /**
@@ -22,17 +21,15 @@ public class TickMeasuringThread extends NiceThread {
 	final int nTasks;//number of tasks per tick
 
 	private int ticksCount = 0;//current number of ticks
-	private final ExecutorService executorService;
-	private final ConcurrentUpdater concurrentUpdater;
+	private final Stoppable stoppable;
 	private final int skipRecords;
 	private final boolean printTicks;
 
-	public TickMeasuringThread(int nTasks, int maxTicks, ExecutorService executorService, ConcurrentUpdater concurrentUpdater, int skipRecords, boolean printTicks) {
+	public TickMeasuringThread(int nTasks, int maxTicks, Stoppable stoppable, int skipRecords, boolean printTicks) {
 		super("TickMeasuringThread");
 		this.nTasks = nTasks;
 		this.maxTicks = maxTicks;
-		this.executorService = executorService;
-		this.concurrentUpdater = concurrentUpdater;
+		this.stoppable = stoppable;
 		this.skipRecords = skipRecords;
 		this.printTicks = printTicks;
 		this.latch = new CountDownLatch(nTasks);
@@ -88,12 +85,7 @@ public class TickMeasuringThread extends NiceThread {
 	}
 
 	private void stopWorkers() {
-		if (executorService != null) {
-			executorService.shutdownNow();
-		}
-		if (concurrentUpdater != null) {
-			concurrentUpdater.stopNow();
-		}
+		stoppable.stopNow();
 	}
 
 	private class StatsPrinterThread extends Thread {

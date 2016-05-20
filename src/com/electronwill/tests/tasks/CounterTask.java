@@ -8,11 +8,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class CounterTask implements Runnable {
 
-	private AtomicInteger counter = new AtomicInteger();
+	private final AtomicInteger counter = new AtomicInteger();
 
 	@Override
 	public void run() {
-		counter.incrementAndGet();
+		counter.getAndIncrement();
 	}
 
 }

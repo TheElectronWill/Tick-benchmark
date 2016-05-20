@@ -17,9 +17,13 @@ public class TaskCreator {
 	}
 
 	public static Runnable createFromName(String name) {
+		return createFromName(name, true);
+	}
+
+	public static Runnable createFromName(String name, boolean concurrent) {
 		switch (name.toLowerCase()) {
 			case "counter":
-				return new TMCounterTask(tmt);
+				return concurrent ? new TMCounterTask.Concurrent(tmt) : new TMCounterTask.Simple(tmt);
 			case "p_mini":
 			case "pmini":
 				return TMPgcdTask.mini(tmt);
@@ -41,9 +45,16 @@ public class TaskCreator {
 			case "p_huge":
 			case "phuge":
 				return TMPgcdTask.huge(tmt);
+			case "hash_map":
+			case "hashmap":
+			case "map":
+				return new TMHashMapTask(tmt, concurrent);
 			default:
 				throw new IllegalArgumentException("Tâche inconnue : " + name);
 		}
+	}
+
+	private TaskCreator() {
 	}
 
 }
