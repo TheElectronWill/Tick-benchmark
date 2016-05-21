@@ -1,0 +1,68 @@
+THREADS_ONLY
+
+----------------------------------------------
+-             Phase de "warm up"             -
+----------------------------------------------
+Durant cette phase, des statistiques seront affichées, mais elles seront probablement moins bonnes car la JVM n'aura pas encore fait toutes les compilations et optimisations utiles.
+================ ConcurrentUpdateThreads ================
+Type de tâche : pmedium
+Nombre de tâches par tick : 500
+Nombre de ticks à effectuer : 200
+Exécution des ticks...
+200 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 200
+Durée d'un tick :
+  minimum : 1.319124
+  maximum : 23.055136
+  moyenne : 2.69961881
+  écart-type : 1.9347366574778457
+
+================ SingleThread ================
+Type de tâche : pmedium
+Nombre de tâches par tick : 500
+Nombre de ticks à effectuer : 200
+Exécution des ticks...
+200 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 200
+Durée d'un tick :
+  minimum : 3.373866
+  maximum : 9.960828
+  moyenne : 4.73945988
+  écart-type : 1.480764866365671
+
+----------------------------------------------
+-                Benchmark !                 -
+----------------------------------------------
+================ ConcurrentUpdateThreads ================
+Type de tâche : pmedium
+Nombre de tâches par tick : 500
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 1.237273
+  maximum : 7.282282
+  moyenne : 2.8031435699999996
+  écart-type : 1.3545954312730826
+
+================ SingleThread ================
+Type de tâche : pmedium
+Nombre de tâches par tick : 500
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 3.6549
+  maximum : 7.779887
+  moyenne : 4.29615246
+  écart-type : 0.9091559572140564

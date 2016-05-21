@@ -1,0 +1,98 @@
+----------------------------------------------
+-             Phase de "warm up"             -
+----------------------------------------------
+Durant cette phase, des statistiques seront affichées, mais elles seront probablement moins bonnes car la JVM n'aura pas encore fait toutes les compilations et optimisations utiles.
+========== ScheduledExecutorService ==========
+Type de tâche : hashmap
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 200
+Exécution des ticks...
+200 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 200
+Durée d'un tick :
+  minimum : 19.702315
+  maximum : 20.740547
+  moyenne : 20.189025779999998
+  écart-type : 0.05948071763674642
+
+================ ConcurrentUpdateThreads ================
+Type de tâche : hashmap
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 200
+Exécution des ticks...
+200 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 200
+Durée d'un tick :
+  minimum : 0.166288
+  maximum : 1.064142
+  moyenne : 0.37431524000000005
+  écart-type : 0.14602498465479224
+
+================ SingleThread ================
+Type de tâche : hashmap
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 200
+Exécution des ticks...
+200 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 200
+Durée d'un tick :
+  minimum : 0.063694
+  maximum : 1.617969
+  moyenne : 0.151857355
+  écart-type : 0.10778747967602248
+
+
+
+----------------------------------------------
+-                Benchmark !                 -
+----------------------------------------------
+========== ScheduledExecutorService ==========
+Type de tâche : hashmap
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 12.345434
+  maximum : 12.893743
+  moyenne : 12.797414450000002
+  écart-type : 0.06168153306751794
+
+================ ConcurrentUpdateThreads ================
+Type de tâche : hashmap
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 0.309458
+  maximum : 0.59999
+  moyenne : 0.46409515
+  écart-type : 0.08474818489116724
+
+================ SingleThread ================
+Type de tâche : hashmap
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 0.038132
+  maximum : 0.151691
+  moyenne : 0.07072007
+  écart-type : 0.025599677446895733

@@ -1,0 +1,109 @@
+run:
+Type de tâche ? (counter/pmini/ptiny/psmall/pmedium/pbig/pbigger/phuge/uneven/hashmap/hybrid1/hybrid2/hybrid3/help/debug)
+hybrid3
+Nombre de tâches par tick ?
+1000
+Nombre de ticks ?
+100
+Que faut-il tester ? (all/executor_only/concurrent_thread_only/single_thread_only/threads_only)
+all
+Lancement du test...
+----------------------------------------------
+-             Phase de "warm up"             -
+----------------------------------------------
+Durant cette phase, des statistiques seront affichées, mais elles seront probablement moins bonnes car la JVM n'aura pas encore fait toutes les compilations et optimisations utiles.
+========== ScheduledExecutorService ==========
+Type de tâche : hybrid3
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 200
+Exécution des ticks...
+200 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 200
+Durée d'un tick :
+  minimum : 20.486186
+  maximum : 23.308095
+  moyenne : 23.179285829999998
+  écart-type : 0.19445869726739198
+
+================ ConcurrentUpdateThreads ================
+Type de tâche : hybrid3
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 200
+Exécution des ticks...
+200 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 200
+Durée d'un tick :
+  minimum : 0.854967
+  maximum : 3.576938
+  moyenne : 1.8023810699999998
+  écart-type : 0.8769531009862083
+
+================ SingleThread ================
+Type de tâche : hybrid3
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 200
+Exécution des ticks...
+200 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 200
+Durée d'un tick :
+  minimum : 0.409326
+  maximum : 3.097843
+  moyenne : 1.13611724
+  écart-type : 0.46123281376260844
+
+----------------------------------------------
+-                Benchmark !                 -
+----------------------------------------------
+========== ScheduledExecutorService ==========
+Type de tâche : hybrid3
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 8.057381
+  maximum : 8.457837
+  moyenne : 8.32579523
+  écart-type : 0.054661685026253286
+
+================ ConcurrentUpdateThreads ================
+Type de tâche : hybrid3
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 0.819909
+  maximum : 3.908184
+  moyenne : 1.64517145
+  écart-type : 0.8402645531515459
+
+================ SingleThread ================
+Type de tâche : hybrid3
+Nombre de tâches par tick : 1000
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 0.406462
+  maximum : 2.182815
+  moyenne : 1.51504704
+  écart-type : 0.5903937175588331
+
+BUILD SUCCESSFUL (total time: 1 minute 1 second)
+

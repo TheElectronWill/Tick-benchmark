@@ -1,0 +1,47 @@
+----------------------------------------------
+-                Benchmark !                 -
+----------------------------------------------
+========== ScheduledExecutorService ==========
+Type de tâche : psmall
+Nombre de tâches par tick : 500
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 3.681753
+  maximum : 4.004907
+  moyenne : 3.92089293
+  écart-type : 0.04607695693135868
+
+================ ConcurrentUpdateThreads ================
+Type de tâche : psmall
+Nombre de tâches par tick : 500
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 0.054476
+  maximum : 0.363105
+  moyenne : 0.13081197
+  écart-type : 0.04568084903599209
+
+================ SingleThread ================
+Type de tâche : psmall
+Nombre de tâches par tick : 500
+Nombre de ticks à effectuer : 100
+Exécution des ticks...
+100 ticks ont été exécutés, comme prévu.
+---------- Statistiques ----------
+Toutes les mesures on été prises en compte.
+Nombre de mesures : 100
+Durée d'un tick :
+  minimum : 0.028146
+  maximum : 0.08807
+  moyenne : 0.05468358
+  écart-type : 0.01043914770293045
